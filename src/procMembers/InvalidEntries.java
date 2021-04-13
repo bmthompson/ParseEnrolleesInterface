@@ -50,4 +50,6 @@ public class InvalidEntries {
         }
         return true;
     }
+
+    public int getNbEntries() { return values.size(); }
 }

@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
     
 public class ProcessAll {
 
@@ -66,6 +68,8 @@ public class ProcessAll {
         ArrayList<Enrollee> enrolleeList = new ArrayList<>(enrolleeCollt);
         Collections.sort(enrolleeList, new SortInsuranceComp());
 
+        int nbInsComps = 0;
+
         // Break up each insurance company and sort enrollees by names
         ArrayList<Enrollee> prevInsList = new ArrayList<>();
         for (Enrollee e : enrolleeList) {
@@ -77,6 +81,7 @@ public class ProcessAll {
                 // Process previous list
                 InsuranceHandler insHandler = new InsuranceHandler( prevInsList );
                 insHandler.writeToFile( prevInsList );
+                nbInsComps++;
 
                 prevInsList.clear();
                 prevInsList.add( e );
@@ -86,10 +91,16 @@ public class ProcessAll {
         if (prevInsList.size() > 0) {      // Process last insurance list
             InsuranceHandler insHandler = new InsuranceHandler( prevInsList );
             insHandler.writeToFile( prevInsList );
+            nbInsComps++;
         }
 
         // Output any invalid entries
         badEntries.outPut();
+
+        String statusS = "#InsuranceComp:  " + nbInsComps + "\n#Enrollees:  " + enrolleeList.size()
+                         + "\n#InvalidRec:  " + badEntries.getNbEntries();
+        JOptionPane.showMessageDialog(null, statusS, "Status:  " + enrolleeFileName, 
+                                      JOptionPane.INFORMATION_MESSAGE);            
     }
 
     private class SortInsuranceComp implements Comparator<Enrollee>
